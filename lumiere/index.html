@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMIÈRE — Haute Parfumerie</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --black: #080808; --gold: #c9a84c; --gold-light: #e8c96c; --cream: #f5f0e8; --dark: #0f0d08; }
+        html { scroll-behavior: smooth; }
+        body { background: var(--black); color: var(--cream); font-family: 'Montserrat', sans-serif; overflow-x: hidden; cursor: none; }
+        .cursor { width: 10px; height: 10px; background: var(--gold); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: transform 0.1s; }
+        .cursor-ring { width: 36px; height: 36px; border: 1px solid var(--gold); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: width 0.3s, height 0.3s, border-color 0.3s; }
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 30px 60px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; letter-spacing: 8px; color: var(--cream); text-decoration: none; }
+        .nav-links { display: flex; gap: 40px; list-style: none; }
+        .nav-links a { color: rgba(245,240,232,0.6); text-decoration: none; font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 300; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--gold); }
+        .nav-back { font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: rgba(201,168,76,0.6); text-decoration: none; transition: color 0.3s; }
+        .nav-back:hover { color: var(--gold); }
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; overflow: hidden; }
+        .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 100% 80% at 50% 60%, #1c1508 0%, #080808 65%); }
+        #particles-canvas { position: absolute; inset: 0; z-index: 1; }
+        .hero-content { position: relative; z-index: 2; text-align: center; }
+        .hero-eyebrow { font-size: 0.65rem; letter-spacing: 7px; text-transform: uppercase; color: var(--gold); margin-bottom: 32px; opacity: 0; animation: fu 1s 0.4s forwards; }
+        .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(5rem, 13vw, 13rem); font-weight: 400; line-height: 0.9; overflow: hidden; margin-bottom: 36px; }
+        .hero-title .t { display: block; opacity: 0; transform: translateY(100%); animation: reveal 1.2s ease-out forwards; }
+        .hero-title .t:nth-child(1) { animation-delay: 0.3s; }
+        .hero-title .t:nth-child(2) { animation-delay: 0.55s; font-style: italic; color: var(--gold); }
+        .hero-sub { font-size: 0.75rem; letter-spacing: 5px; text-transform: uppercase; font-weight: 300; opacity: 0; animation: fu 1s 1s forwards; margin-bottom: 56px; color: rgba(245,240,232,0.6); }
+        .btn-gold { display: inline-block; padding: 18px 52px; border: 1px solid var(--gold); color: var(--gold); text-decoration: none; font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; position: relative; overflow: hidden; transition: color 0.4s; opacity: 0; animation: fu 1s 1.3s forwards; }
+        .btn-gold::before { content: ''; position: absolute; inset: 0; background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
+        .btn-gold span { position: relative; z-index: 1; }
+        .btn-gold:hover::before { transform: scaleX(1); }
+        .btn-gold:hover { color: var(--black); }
+        .scroll-hint { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 12px; opacity: 0; animation: fu 1s 1.8s forwards; z-index: 2; }
+        .scroll-hint span { font-size: 0.55rem; letter-spacing: 5px; text-transform: uppercase; color: rgba(201,168,76,0.6); }
+        .scroll-line { width: 1px; height: 55px; background: linear-gradient(to bottom, var(--gold), transparent); animation: pulse-line 2.5s infinite ease-in-out; }
+        @keyframes pulse-line { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+        @keyframes reveal { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fu { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .about { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; }
+        .about-visual { background: #0c0a06; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .about-visual::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, rgba(201,168,76,0.06) 0%, transparent 70%); }
+        .frame-outer { width: 280px; height: 380px; border: 1px solid rgba(201,168,76,0.2); display: flex; align-items: center; justify-content: center; position: relative; }
+        .frame-inner { width: 240px; height: 340px; border: 1px solid rgba(201,168,76,0.1); display: flex; align-items: center; justify-content: center; }
+        .frame-letter { font-family: 'Playfair Display', serif; font-size: 9rem; font-style: italic; color: rgba(201,168,76,0.12); line-height: 1; }
+        .corner { position: absolute; width: 12px; height: 12px; border-color: var(--gold); border-style: solid; }
+        .corner.tl { top: -1px; left: -1px; border-width: 1px 0 0 1px; } .corner.tr { top: -1px; right: -1px; border-width: 1px 1px 0 0; }
+        .corner.bl { bottom: -1px; left: -1px; border-width: 0 0 1px 1px; } .corner.br { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+        .about-text { padding: 100px 80px; display: flex; flex-direction: column; justify-content: center; }
+        .sec-label { font-size: 0.6rem; letter-spacing: 5px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+        .sec-title { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 3.5vw, 3.5rem); font-weight: 400; line-height: 1.2; margin-bottom: 28px; }
+        .sec-title em { font-style: italic; color: var(--gold); }
+        .gold-rule { width: 50px; height: 1px; background: var(--gold); margin: 32px 0; }
+        .sec-p { font-size: 0.88rem; line-height: 1.9; color: rgba(245,240,232,0.55); font-weight: 300; max-width: 440px; margin-bottom: 18px; }
+        .collection { padding: 120px 60px; text-align: center; }
+        .col-header { margin-bottom: 70px; }
+        .products { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; max-width: 1100px; margin: 0 auto; }
+        .prod { background: #0d0d09; padding: 56px 36px; position: relative; overflow: hidden; transition: background 0.5s; }
+        .prod::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform 0.5s ease; }
+        .prod:hover { background: #131108; } .prod:hover::after { transform: scaleX(1); }
+        .prod-num { font-size: 0.6rem; letter-spacing: 3px; color: rgba(201,168,76,0.5); margin-bottom: 24px; }
+        .prod-icon { width: 72px; height: 72px; border: 1px solid rgba(201,168,76,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 28px; transition: border-color 0.3s, transform 0.4s; }
+        .prod:hover .prod-icon { border-color: var(--gold); transform: scale(1.1) rotate(8deg); }
+        .prod-name { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 14px; }
+        .prod-desc { font-size: 0.78rem; color: rgba(245,240,232,0.45); line-height: 1.8; font-weight: 300; }
+        .prod-price { margin-top: 28px; font-size: 0.72rem; letter-spacing: 3px; color: var(--gold); }
+        .quote-section { padding: 120px 60px; background: #050505; text-align: center; position: relative; overflow: hidden; }
+        .quote-section::before { content: '\201C'; position: absolute; top: -120px; left: 50%; transform: translateX(-50%); font-family: 'Playfair Display', serif; font-size: 40rem; color: rgba(201,168,76,0.025); line-height: 1; pointer-events: none; }
+        .quote-text { font-family: 'Playfair Display', serif; font-size: clamp(1.4rem, 2.8vw, 2.4rem); font-style: italic; line-height: 1.65; max-width: 760px; margin: 0 auto 36px; }
+        .quote-author { font-size: 0.68rem; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); }
+        footer { padding: 80px 60px 40px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 60px; border-top: 1px solid rgba(201,168,76,0.08); }
+        .ft-logo { font-family: 'Playfair Display', serif; font-size: 2.8rem; letter-spacing: 8px; margin-bottom: 16px; }
+        .ft-sub { font-size: 0.7rem; letter-spacing: 2px; color: rgba(245,240,232,0.3); font-weight: 300; }
+        .ft-title { font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 22px; }
+        .ft-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+        .ft-list a { color: rgba(245,240,232,0.45); text-decoration: none; font-size: 0.82rem; font-weight: 300; transition: color 0.3s; }
+        .ft-list a:hover { color: var(--gold); }
+        .ft-bottom { grid-column: 1/-1; padding-top: 36px; border-top: 1px solid rgba(201,168,76,0.04); display: flex; justify-content: space-between; }
+        .ft-copy { font-size: 0.68rem; color: rgba(245,240,232,0.22); letter-spacing: 2px; }
+        .reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .rd1 { transition-delay: 0.1s; } .rd2 { transition-delay: 0.2s; } .rd3 { transition-delay: 0.35s; }
+        @media (max-width: 768px) { nav { padding: 20px 24px; } .nav-links { display: none; } .about { grid-template-columns: 1fr; } .about-visual { display: none; } .about-text { padding: 70px 28px; } .products { grid-template-columns: 1fr; } .collection { padding: 80px 28px; } footer { grid-template-columns: 1fr; padding: 60px 28px 30px; } }
+    </style>
+</head>
+<body>
+    <div class="cursor" id="cur"></div>
+    <div class="cursor-ring" id="ring"></div>
+    <nav>
+        <a href="../index.html" class="nav-back">← Retour</a>
+        <a href="#" class="logo">LUMIÈRE</a>
+        <ul class="nav-links"><li><a href="#about">Maison</a></li><li><a href="#collection">Collection</a></li><li><a href="#contact">Contact</a></li></ul>
+    </nav>
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <canvas id="particles-canvas"></canvas>
+        <div class="hero-content">
+            <p class="hero-eyebrow">Haute Parfumerie — Paris, depuis 1847</p>
+            <h1 class="hero-title"><span class="t">Lumière</span><span class="t">Dorée</span></h1>
+            <p class="hero-sub">L'essence de l'élégance absolue</p>
+            <a href="#collection" class="btn-gold"><span>Découvrir la collection</span></a>
+        </div>
+        <div class="scroll-hint"><span>Scroll</span><div class="scroll-line"></div></div>
+    </section>
+    <section class="about" id="about">
+        <div class="about-visual">
+            <div class="frame-outer">
+                <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+                <div class="frame-inner"><span class="frame-letter">L</span></div>
+            </div>
+        </div>
+        <div class="about-text">
+            <p class="sec-label reveal">Notre Héritage</p>
+            <h2 class="sec-title reveal rd1">L'art de la <em>perfection</em><br>absolue</h2>
+            <div class="gold-rule reveal rd2"></div>
+            <p class="sec-p reveal rd2">Depuis 1847, la Maison Lumière perpétue l'art ancestral de la parfumerie française. Chaque flacon renferme une histoire, un voyage, une émotion intemporelle.</p>
+            <p class="sec-p reveal rd3">Nos maîtres parfumeurs sélectionnent avec soin les matières premières les plus rares du monde entier pour créer des œuvres olfactives d'exception.</p>
+        </div>
+    </section>
+    <section class="collection" id="collection">
+        <div class="col-header"><p class="sec-label reveal">Notre Collection</p><h2 class="sec-title reveal rd1">Créations <em>d'exception</em></h2></div>
+        <div class="products">
+            <div class="prod reveal"><p class="prod-num">01</p><div class="prod-icon">✦</div><h3 class="prod-name">Nuit Étoilée</h3><p class="prod-desc">Oud précieux, rose de Damas, ambre oriental.</p><p class="prod-price">420 €</p></div>
+            <div class="prod reveal rd1"><p class="prod-num">02</p><div class="prod-icon">◈</div><h3 class="prod-name">Aube Dorée</h3><p class="prod-desc">Jasmin de Grasse, santal de Mysore, vanille de Madagascar.</p><p class="prod-price">380 €</p></div>
+            <div class="prod reveal rd2"><p class="prod-num">03</p><div class="prod-icon">⬟</div><h3 class="prod-name">Velours Noir</h3><p class="prod-desc">Iris de Florence, patchouli noble, musc blanc.</p><p class="prod-price">450 €</p></div>
+        </div>
+    </section>
+    <section class="quote-section">
+        <p class="sec-label reveal">Héritage</p>
+        <blockquote class="quote-text reveal rd1">"Lumière n'est pas simplement un parfum, c'est une expérience transformatrice."</blockquote>
+        <p class="quote-author reveal rd2">— Isabelle Fontaine, Journaliste Mode</p>
+    </section>
+    <footer id="contact">
+        <div><div class="ft-logo">L</div><p class="ft-sub">L'excellence à l'état pur</p></div>
+        <div><p class="ft-title">Navigation</p><ul class="ft-list"><li><a href="#">Maison</a></li><li><a href="#collection">Collection</a></li></ul></div>
+        <div><p class="ft-title">Contact</p><ul class="ft-list"><li><a href="#">Paris — 8e Arrondissement</a></li><li><a href="#">contact@lumiere-paris.fr</a></li></ul></div>
+        <div class="ft-bottom"><p class="ft-copy">© 2024 Lumière Paris.</p><p class="ft-copy">Fait avec passion en France</p></div>
+    </footer>
+    <script>
+        const cur=document.getElementById('cur'),ring=document.getElementById('ring');let mx=0,my=0,rx=0,ry=0;
+        document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+        (function f(){rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(f);})();
+        document.querySelectorAll('a,.prod').forEach(el=>{el.addEventListener('mouseenter',()=>{ring.style.width='56px';ring.style.height='56px';});el.addEventListener('mouseleave',()=>{ring.style.width='36px';ring.style.height='36px';});});
+        const canvas=document.getElementById('particles-canvas'),ctx=canvas.getContext('2d');
+        canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+        window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+        const pts=Array.from({length:40},()=>({x:Math.random()*canvas.width,y:canvas.height+Math.random()*200,vx:(Math.random()-0.5)*0.4,vy:-(Math.random()*0.6+0.3),alpha:0,size:Math.random()*1.5+0.5,life:0,maxLife:Math.random()*300+200}));
+        function dp(){ctx.clearRect(0,0,canvas.width,canvas.height);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life++;p.alpha=p.life<30?p.life/30:p.life>p.maxLife-30?(p.maxLife-p.life)/30:0.6;if(p.life>p.maxLife){p.y=canvas.height+10;p.x=Math.random()*canvas.width;p.life=0;}ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fillStyle=`rgba(201,168,76,${p.alpha})`;ctx.fill();});requestAnimationFrame(dp);}dp();
+        const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:0.1});
+        document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+    </script>
+</body>
+</html>

@@ -1,10 +1,107 @@
-!DOCTYPE html>
-<html xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b'
-  xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
-
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-  <meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport' />
-  <meta content='noindex,nofollow' name='robots' />
-  <meta content='IE=IE7; IE=IE8; IE=IE9; IE=IE10; IE=edge; chrome=1' http-equiv='X-UA-Compatible' />
-  <title>HD1 | Blogma</title>
-  <style id='page-skin-1' type='text/css'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sites Vitrines — Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --bg: #060608; --white: #f0eee8; --accent: #7c6aff; }
+        html { scroll-behavior: smooth; }
+        body { background: var(--bg); color: var(--white); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .bg-gradient {
+            position: fixed; inset: 0; z-index: 0;
+            background: radial-gradient(ellipse 80% 60% at 20% 20%, rgba(124,106,255,0.12) 0%, transparent 60%),
+                        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(255,100,130,0.08) 0%, transparent 60%);
+            animation: bg-shift 12s ease-in-out infinite alternate;
+        }
+        @keyframes bg-shift { from { opacity: 0.6; transform: scale(1); } to { opacity: 1; transform: scale(1.05); } }
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 28px 60px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .nav-logo { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; }
+        .nav-tag { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); padding: 6px 16px; border: 1px solid rgba(124,106,255,0.3); border-radius: 20px; }
+        .hero { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 120px 40px 80px; }
+        .hero-label { font-size: 0.7rem; letter-spacing: 5px; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; opacity: 0; animation: fadeup 1s 0.3s forwards; }
+        .hero-title { font-family: 'Syne', sans-serif; font-size: clamp(3.5rem, 9vw, 9rem); font-weight: 800; line-height: 0.95; margin-bottom: 30px; overflow: hidden; }
+        .hero-title .line { display: block; opacity: 0; transform: translateY(80px); animation: slideup 1s ease-out forwards; }
+        .hero-title .line:nth-child(1) { animation-delay: 0.4s; }
+        .hero-title .line:nth-child(2) { animation-delay: 0.6s; color: transparent; -webkit-text-stroke: 1px rgba(240,238,232,0.4); }
+        .hero-title .line:nth-child(3) { animation-delay: 0.8s; }
+        .hero-sub { font-size: 1rem; font-weight: 300; color: rgba(240,238,232,0.5); max-width: 480px; line-height: 1.8; margin-bottom: 60px; opacity: 0; animation: fadeup 1s 1s forwards; }
+        @keyframes fadeup { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+        @keyframes slideup { to { opacity:1; transform: translateY(0); } }
+        .cards-section { position: relative; z-index: 1; padding: 40px 60px 120px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1400px; margin: 0 auto; }
+        .site-card { position: relative; overflow: hidden; border-radius: 20px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); padding: 48px 40px 40px; text-decoration: none; color: inherit; transition: transform 0.4s cubic-bezier(.2,.8,.3,1), border-color 0.4s ease, background 0.4s ease; display: flex; flex-direction: column; min-height: 380px; }
+        .site-card::before { content: ''; position: absolute; inset: 0; border-radius: 20px; background: var(--card-gradient); opacity: 0; transition: opacity 0.5s ease; }
+        .site-card:hover { transform: translateY(-8px); border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); }
+        .site-card:hover::before { opacity: 1; }
+        .card-number { font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase; color: var(--card-accent); margin-bottom: 40px; font-family: 'Syne', sans-serif; }
+        .card-icon { width: 60px; height: 60px; border-radius: 16px; background: var(--card-icon-bg); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 30px; transition: transform 0.4s ease; }
+        .site-card:hover .card-icon { transform: scale(1.15) rotate(-5deg); }
+        .card-title { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; margin-bottom: 12px; }
+        .card-type { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--card-accent); margin-bottom: 16px; }
+        .card-desc { font-size: 0.9rem; line-height: 1.7; color: rgba(240,238,232,0.5); font-weight: 300; flex: 1; }
+        .card-cta { margin-top: 36px; display: flex; align-items: center; gap: 10px; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; color: var(--card-accent); font-weight: 500; transition: gap 0.3s ease; }
+        .site-card:hover .card-cta { gap: 16px; }
+        .card-arrow { font-size: 1.1rem; transition: transform 0.3s ease; }
+        .site-card:hover .card-arrow { transform: translateX(4px); }
+        .card-lumiere { --card-accent: #c9a84c; --card-icon-bg: rgba(201,168,76,0.1); --card-gradient: linear-gradient(135deg, rgba(201,168,76,0.04), transparent); }
+        .card-vortex  { --card-accent: #a78bfa; --card-icon-bg: rgba(167,139,250,0.1); --card-gradient: linear-gradient(135deg, rgba(167,139,250,0.06), transparent); }
+        .card-nova    { --card-accent: #38bdf8; --card-icon-bg: rgba(56,189,248,0.1);  --card-gradient: linear-gradient(135deg, rgba(56,189,248,0.06), transparent); }
+        footer { position: relative; z-index: 1; text-align: center; padding: 40px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.75rem; color: rgba(240,238,232,0.25); letter-spacing: 2px; }
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-d1 { transition-delay: 0.1s; } .reveal-d2 { transition-delay: 0.2s; }
+        @media (max-width: 900px) { .cards-section { grid-template-columns: 1fr; padding: 40px 24px 80px; } nav { padding: 20px 24px; } }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <nav>
+        <div class="nav-logo">Studio</div>
+        <div class="nav-tag">3 sites vitrines</div>
+    </nav>
+    <section class="hero">
+        <p class="hero-label">Sites vitrines animés</p>
+        <h1 class="hero-title">
+            <span class="line">Trois</span>
+            <span class="line">Univers</span>
+            <span class="line">Uniques</span>
+        </h1>
+        <p class="hero-sub">Trois expériences web immersives, chacune avec son identité, ses animations et son univers visuel propre.</p>
+    </section>
+    <div class="cards-section">
+        <a href="lumiere/index.html" class="site-card card-lumiere reveal">
+            <p class="card-number">01</p>
+            <div class="card-icon">✦</div>
+            <p class="card-type">Luxe &amp; Parfumerie</p>
+            <h2 class="card-title">Lumière</h2>
+            <p class="card-desc">Site vitrine haut de gamme pour une maison de parfumerie parisienne. Noir profond, or, cursor personnalisé et animations veloutées.</p>
+            <div class="card-cta">Voir le site <span class="card-arrow">→</span></div>
+        </a>
+        <a href="vortex/index.html" class="site-card card-vortex reveal reveal-d1">
+            <p class="card-number">02</p>
+            <div class="card-icon">⚡</div>
+            <p class="card-type">Agence Créative</p>
+            <h2 class="card-title">Vortex</h2>
+            <p class="card-desc">Studio digital audacieux avec effet de frappe, gradients vibrants, animations au scroll et effets magnétiques sur les boutons.</p>
+            <div class="card-cta">Voir le site <span class="card-arrow">→</span></div>
+        </a>
+        <a href="nova/index.html" class="site-card card-nova reveal reveal-d2">
+            <p class="card-number">03</p>
+            <div class="card-icon">◎</div>
+            <p class="card-type">Tech &amp; SaaS</p>
+            <h2 class="card-title">Nova</h2>
+            <p class="card-desc">Landing page futuriste pour une startup tech. Glassmorphism, particules animées sur canvas, compteurs et cartes flottantes.</p>
+            <div class="card-cta">Voir le site <span class="card-arrow">→</span></div>
+        </a>
+    </div>
+    <footer>© 2024 — Créé avec passion</footer>
+    <script>
+        const reveals = document.querySelectorAll('.reveal');
+        const obs = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.1 });
+        reveals.forEach(el => obs.observe(el));
+    </script>
+</body>
+</html>
